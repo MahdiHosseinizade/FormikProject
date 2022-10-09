@@ -1,71 +1,79 @@
 import { useFormik } from "formik";
+import * as Yup from 'yup' ;
 
 const value = {
     name:"",
     email:"",
     password:""
-};
-
-const validates = (value) =>{
-    let errors = {};
-    if (!value.name) errors.name = 'name is Requierd'
-    if (!value.email) errors.email = 'email is Requierd'
-    if (!value.password) errors.password = 'password is Requierd'
-    
-    return errors ;
 }
 
-const SignUpForm = () => {
+// const validatesError = (value) => {
+//     let errors = {};
+//     if(!value.name) errors.name = 'name is Requierd'
+//     if(!value.email) errors.email = 'email is Requierd'
+//     if(!value.password) errors.password = 'password is Requierd'
+//     return errors
+// }
 
+const validationschema = Yup.object({
+    name : Yup.string().required('Name is Requierd'),
+    email : Yup.string().email('Invalid email format').required('email is Requierd'),
+    password: Yup.string()
+    .required('Password is Requierd') 
+    .min(8, 'Password is too short - should be 8 chars minimum.')
+    .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.')
+})
+
+const SignUpForm = () => {
+    
     const formik = useFormik({
-        initialValues : value ,
-        onSubmit : (values) => console.log(values), 
-        validate :validates
-    })  
+        initialValues : value,
+        onSubmit : (values) => console.log(values),
+        validationSchema : validationschema
+        })
+    // console.log(formik.handleSubmit);
+    
+    
     
 
     return (
         <form onSubmit={formik.handleSubmit}>
-                <div className="formControl">
-                    <label>name</label>
-                    <input 
-                        type="text"
-                        name="name"
-                        value={formik.values.name} 
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                    />
-                    {formik.errors.name && formik.touched.name && <div className="error">{formik.errors.name}</div>}
-                </div>
-                <div className="formControl">
-                    <label>email</label>
-                    <input
-                        type="text" 
-                        name="email" 
-                        value={formik.values.email} 
-                        onBlur={formik.handleBlur}
-                        onChange={formik.handleChange}
-                    />
-                    {formik.errors.email && formik.touched.email && <div className="error">{formik.errors.email}</div>}
-                </div>
-                <div className="formControl">
-                    <label>Password</label>
-                    <input 
-                        type="text" 
-                        name="password" 
-                        value={formik.values.password} 
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                    />
-                    {formik.errors.password && formik.touched.password && <div className="error">{formik.errors.password}</div>}
-                </div>
-                <button  type="submit">Submit</button>
+            <div className="fromControl">
+                <label>name</label>
+                <input 
+                    type="text"
+                    name="name" 
+                    value={formik.values.name}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                />
+                {formik.errors.name && formik.touched.name  && <div className="error">{formik.errors.name}</div>}
+            </div>
+            <div className="fromControl">
+                <label>email</label>
+                <input 
+                    type="text" 
+                    name="email" 
+                    value={formik.values.email}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                />
+                {formik.errors.email && formik.touched.email  && <div className="error">{formik.errors.email}</div>}
+            </div>
+            <div className="fromControl">
+                <label>password</label>
+                <input 
+                    type="password"
+                    name="password" 
+                    value={formik.values.password} 
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                />
+                {formik.errors.password && formik.touched.password  && <div className="error">{formik.errors.password}</div>}
+            </div>
+            <button className="submit-button" type="submit">Submit</button>
         </form>
     );
 }
  
 export default SignUpForm;
-
-// 1.managin state
-// 2.handling from submition
-// 3.validation

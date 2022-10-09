@@ -35,3 +35,9 @@ button{
 .error{
   color: crimson;
 }
+
+.submit-button{
+  border-radius: 5px;
+  border: 1px solid rgb(150, 147, 147);
+  margin-top: 0.5rem;
+}
