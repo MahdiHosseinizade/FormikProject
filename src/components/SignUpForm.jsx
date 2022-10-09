@@ -1,42 +1,65 @@
-import { useState } from "react";
+import { useFormik } from "formik";
 
+const value = {
+    name:"",
+    email:"",
+    password:""
+};
+
+const validates = (value) =>{
+    let errors = {};
+    if (!value.name) errors.name = 'name is Requierd'
+    if (!value.email) errors.email = 'email is Requierd'
+    if (!value.password) errors.password = 'password is Requierd'
+    
+    return errors ;
+}
 
 const SignUpForm = () => {
+
+    const formik = useFormik({
+        initialValues : value ,
+        onSubmit : (values) => console.log(values), 
+        validate :validates
+    })  
     
-    const [userData,setUserData] = useState({
-        name:"",
-        email:"",
-        password :""
-    })
-
-
-    const changeHandler = (e) =>{
-        const value = e.target.value;
-        setUserData({...userData,[e.target.name]: value});
-    }
-
-
-    const submitHandler = (e) =>{
-        e.preventDefault()
-        setUserData()
-    }
-
 
     return (
-        <form onSubmit={submitHandler}>
+        <form onSubmit={formik.handleSubmit}>
                 <div className="formControl">
                     <label>name</label>
-                    <input type="text" name="name" value={userData.name} onChange={changeHandler}/>
+                    <input 
+                        type="text"
+                        name="name"
+                        value={formik.values.name} 
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                    />
+                    {formik.errors.name && formik.touched.name && <div className="error">{formik.errors.name}</div>}
                 </div>
                 <div className="formControl">
                     <label>email</label>
-                    <input type="text" name="email" value={userData.email} onChange={changeHandler}/>
+                    <input
+                        type="text" 
+                        name="email" 
+                        value={formik.values.email} 
+                        onBlur={formik.handleBlur}
+                        onChange={formik.handleChange}
+                    />
+                    {formik.errors.email && formik.touched.email && <div className="error">{formik.errors.email}</div>}
                 </div>
                 <div className="formControl">
                     <label>Password</label>
-                    <input type="text" name="password" value={userData.password} onChange={changeHandler}/>
+                    <input 
+                        type="text" 
+                        name="password" 
+                        value={formik.values.password} 
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                    />
+                    {formik.errors.password && formik.touched.password && <div className="error">{formik.errors.password}</div>}
                 </div>
-                <button>Submit</button>
+                <button  type="submit">Submit</button>
         </form>
     );
 }
